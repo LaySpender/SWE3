@@ -54,88 +54,66 @@ namespace LinqORM
             List<T> result = new List<T>();
             PropertyInfo[] properties = typeof(T).GetProperties();
 
-            foreach (var column in resultSet)
+            foreach (var row in resultSet)
             {
                 var instance = Activator.CreateInstance<T>();
                 foreach (var property in properties)
                 {
-                    if (property.CustomAttributes.Any())
+                    foreach (var attribute in property.GetCustomAttributes())
                     {
-                        foreach (var attribute in property.GetCustomAttributes())
+                        if (attribute is ColumnAttribute)
                         {
-                            if (attribute is ColumnAttribute)
-                            {
-                                ColumnAttribute colAttr = (ColumnAttribute)attribute;
-                                property.SetValue(instance, column[colAttr.Name]);
-                            }
+                            ColumnAttribute colAttr = (ColumnAttribute)attribute;
+                            property.SetValue(instance, row[colAttr.Name]);
+                        }
+                        else if (attribute is PrimaryKeyAttribute)
+                        {
+                            var pkatt = (PrimaryKeyAttribute)attribute;
+                            property.SetValue(instance, row[pkatt.Name]);
                         }
                     }
                 }
-                if (InstanceIsTracked(instance))
-                {
-                    result.Add(GetInstanceFromTracker(instance));
-                }
-                else
-                {
-                    AddToTracking(instance);
-                    result.Add(GetInstanceFromTracker(instance));
-                }
+                instance = tracker.ReplaceTracked(instance);
+                tracker.Track(instance);
+                result.Add(instance);                
             }
             return result;
         }
 
-        private bool InstanceIsTracked<T>(T obj)
-        {
-            PropertyInfo idProperty = typeof(T).GetProperties().Single(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(PrimaryKeyAttribute)));
-            if (!tracker.AllObjects.OfType<T>().Any(x => (int)idProperty.GetValue(x) == (int)idProperty.GetValue(obj)))
-            {                
-                return false;
-            }
-            return true;
-        }
-
-        private T GetInstanceFromTracker<T>(T obj)
-        {
-            PropertyInfo idProperty = typeof(T)
-                .GetProperties()
-                .Single(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(PrimaryKeyAttribute)));
-            if (!InstanceIsTracked<T>(obj))
-            {
-                throw new InstanceNotFoundException();
-            }
-            return tracker.AllObjects.OfType<T>().Single(x => (int)idProperty.GetValue(x) == (int)idProperty.GetValue(obj));
-        }
-
         public void Attach<T>(T obj)
         {
+            if (HasToSave) throw new ActionsNotExecutedException();
             HasToSave = true;
-            AddToSave(obj);
+            tracker.AddToSave(obj);
         }
 
-        private void AddToSave<T>(T obj)
-        {
-            tracker.ToSave.Add(obj);
-            AddToTracking(obj);
-        }
-
-        private void AddToTracking<T>(T obj)
-        {
-            tracker.AllObjects.Add(obj);
-        }
+        //private void AddToSave<T>(T obj)
+        //{
+        //    tracker.ToSave.Add(obj);
+        //    AddToTracking(obj);
+        //}
 
         public void Delete<T>(T obj)
         {
+            if (HasToSave) throw new ActionsNotExecutedException();
             HasToSave = true;
-            AddToDelete(obj);
+            tracker.AddToDelete(obj);
         }
 
-        private void AddToDelete<T>(T obj)
-        {
-            tracker.ToDelete.Add(obj);
-            tracker.AllObjects.Remove(obj);
-        }
+        //private void AddToDelete<T>(T obj)
+        //{
+        //    tracker.ToDelete.Add(obj);
+        //    tracker.AllObjects.Remove(obj);
+        //}
 
-        public void SaveChanges<T>()
+        //public void Update<T>(T obj)
+        //{
+        //    if (HasToSave) throw new ActionsNotExecutedException();
+        //    HasToSave = true;
+        //    tracker.Modified.Add(obj);
+        //}
+
+        public void SaveChanges()
         {
             // todo: get all the information from changeTracker and update, delete and insert all the data
             SubmitDelete(tracker.ToDelete);
@@ -151,6 +129,7 @@ namespace LinqORM
                 ISQLDeleteProvider sdp = GetDeleteProvider(entry);
                 sdp.DeleteObject();
             }
+            toDelete.RemoveRange(0, toDelete.Count);
         }
 
         private void SubmitInsert(List<object> toSave)
@@ -160,6 +139,7 @@ namespace LinqORM
                 ISQLInsertProvider sip = GetInsertProvider(entry);
                 sip.InsertObject(entry);
             }
+            toSave.RemoveRange(0, toSave.Count);
         }
 
         private void SubmitUpdate(List<object> modified)
@@ -169,6 +149,7 @@ namespace LinqORM
                 ISQLUpdateProvider sup = GetUpdateProvider(entry);
                 sup.UpdateObject(entry);
             }
+            modified.RemoveRange(0, modified.Count);
         }
     }
 }

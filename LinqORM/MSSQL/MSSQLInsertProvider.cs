@@ -37,14 +37,17 @@ namespace LinqORM.MSSQL
                 {
                     if (attribute is ColumnAttribute)
                     {
-                        ColumnAttribute columnAttr = (ColumnAttribute)attribute;
-                        columns.Add(columnAttr.Name);
-                        values.Add(ValueFormatter.FormatForQuery(property.GetValue(obj)));
-                    }
-                    else if (attribute is PrimaryKeyAttribute)
-                    {
-                        var primaryKeyAttr = (PrimaryKeyAttribute)attribute;
-                        primaryKeyProperty = primaryKeyAttr.Name;
+                        if (attribute is PrimaryKeyAttribute)
+                        {
+                            var primaryKeyAttr = (PrimaryKeyAttribute)attribute;
+                            primaryKeyProperty = primaryKeyAttr.Name;
+                        }
+                        else
+                        {
+                            ColumnAttribute columnAttr = (ColumnAttribute)attribute;
+                            columns.Add(columnAttr.Name);
+                            values.Add(ValueFormatter.FormatForQuery(property.GetValue(obj)));
+                        }                        
                     }
                 }
             }

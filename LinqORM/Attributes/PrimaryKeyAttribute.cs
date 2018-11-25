@@ -5,14 +5,10 @@ using System.Text;
 
 namespace LinqORM.Attributes
 {
-    public class PrimaryKeyAttribute : Attribute
+    public class PrimaryKeyAttribute : ColumnAttribute
     {
-        public string Name { get; private set; }
-
-        public PrimaryKeyAttribute([CallerMemberName] string name = "")
+        public PrimaryKeyAttribute([CallerMemberName] string name = "") : base(name)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException();
-            Name = name;
         }
     }
 }

@@ -11,12 +11,15 @@ namespace TestApplication
         static void Main(string[] args)
         {
             Console.WriteLine("Hello Linq!");
-            SelectWithWhereString();
+            SelectOne();
+            InsertOne();
+            DeleteOne();
+            //UpdateOne();
             //TableDoesNotExist();
             Console.ReadKey();
         }
-
-        private static void SelectWithWhereString()
+        
+        private static void SelectOne()
         {
             ORM orm = new ORM();
 
@@ -31,7 +34,128 @@ namespace TestApplication
             {
                 Console.WriteLine($"{i.Id}, {i.WerkId}, {i.Bezeichnung}");
             }
+            Console.ReadKey();
+            Console.Clear();
         }
+
+        private static void InsertOne()
+        {
+            ORM orm = new ORM();
+
+            var newObj = new Werke();
+            newObj.Bezeichnung = "Eckenwerk";
+            newObj.Ort = "Graz";
+            newObj.Strasse = "Eckstraße";
+
+            orm.Attach(newObj);
+            Console.WriteLine("Created object.");
+            orm.SaveChanges();
+            Console.WriteLine("Saved object.");
+
+            IQueryable<Werke> qry = orm.GetQuery<Werke>();
+
+            IQueryable<Werke> filtered = qry
+                .Where(i => i.Bezeichnung == "Eckenwerk");
+        
+
+            List<Werke> lst = filtered.ToList();
+
+            foreach (var i in lst)
+            {
+                Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        private static void DeleteOne()
+        {
+            ORM orm = new ORM();
+
+            var newObj = new Werke();
+            newObj.Bezeichnung = "Eckenwerk";
+            newObj.Ort = "Graz";
+            newObj.Strasse = "Eckstraße";
+
+            orm.Attach(newObj);
+            Console.WriteLine("Created object.");
+            orm.SaveChanges();
+            Console.WriteLine("Saved object.");
+
+            IQueryable<Werke> qry = orm.GetQuery<Werke>();
+
+            IQueryable<Werke> filtered = qry
+                .Where(i => i.Bezeichnung == "Eckenwerk");
+            
+            List<Werke> lst = filtered.ToList();
+
+            foreach (var i in lst)
+            {
+                Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+            }
+
+            orm.Delete(newObj);
+            Console.WriteLine("Add to delete object.");
+            orm.SaveChanges();
+            Console.WriteLine("Deleted object.");
+
+            IQueryable<Werke> qry2 = orm.GetQuery<Werke>();
+
+            IQueryable<Werke> filtered2 = qry2
+                .Where(i => i.Bezeichnung == "Eckenwerk");
+
+
+            List<Werke> lst2 = filtered2.ToList();
+
+            foreach (var i in lst2)
+            {
+                Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        //private static void UpdateOne()
+        //{
+        //    ORM orm = new ORM();
+
+        //    IQueryable<Werke> qry = orm.GetQuery<Werke>();
+
+        //    IQueryable<Werke> filtered = qry
+        //        .Where(i => i.Id == 3);
+
+        //    List<Werke> lst = filtered.ToList();
+
+        //    foreach (var i in lst)
+        //    {
+        //        Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+        //    }
+        //    var newObj = lst[0];
+        //    newObj.Ort = "Eckenberger";
+
+        //    orm.Update(newObj);
+        //    Console.WriteLine("Add to update object.");
+        //    orm.SaveChanges();
+        //    Console.WriteLine("Updated object.");
+
+        //    IQueryable<Werke> qry2 = orm.GetQuery<Werke>();
+
+        //    IQueryable<Werke> filtered2 = qry2
+        //        .Where(i => i.Id == 3);
+
+
+        //    List<Werke> lst2 = filtered2.ToList();
+
+        //    foreach (var i in lst2)
+        //    {
+        //        Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+        //    }
+
+        //    Console.ReadKey();
+        //    Console.Clear();
+        //}
 
         private static void TableDoesNotExist()
         {
