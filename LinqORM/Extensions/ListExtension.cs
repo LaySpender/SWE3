@@ -5,8 +5,18 @@ using System.Text;
 
 namespace LinqORM.Extensions
 {
+    /// <summary>
+    /// Class for List extension
+    /// </summary>
     public static class ListExtension
     {
+        /// <summary>
+        /// Gets the entries seperated by.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list">The list.</param>
+        /// <param name="seperator">The seperator.</param>
+        /// <returns></returns>
         public static string GetEntriesSeperatedBy<T>(this List<T> list, string seperator)
         {
             string result = list[0].ToString();

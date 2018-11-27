@@ -12,6 +12,10 @@ using LinqORM.Exceptions;
 
 namespace LinqORM.MSSQL
 {
+    /// <summary>
+    /// Class for communication with mssql database regarding insert statements.
+    /// </summary>
+    /// <seealso cref="LinqORM.Interfaces.ISQLInsertProvider" />
     public class MSSQLInsertProvider : ISQLInsertProvider
     {
         string table;
@@ -23,6 +27,11 @@ namespace LinqORM.MSSQL
             "User id=orm;" +
             "Password=c#;";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MSSQLInsertProvider"/> class.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <exception cref="NoPrimaryKeyException"></exception>
         public MSSQLInsertProvider(object obj)
         {
             table = obj.GetType().Name;
@@ -61,8 +70,19 @@ namespace LinqORM.MSSQL
             }
         }
 
-        private string Statement => statement;
+        /// <summary>
+        /// Gets the statement.
+        /// </summary>
+        /// <value>
+        /// The statement.
+        /// </value>
+        public string Statement => statement;
 
+        /// <summary>
+        /// Inserts the object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <exception cref="Exception">Exception while inserting data in db.</exception>
         public void InsertObject(object obj)
         {
             try

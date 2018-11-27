@@ -14,7 +14,7 @@ namespace TestApplication
             SelectOne();
             InsertOne();
             DeleteOne();
-            //UpdateOne();
+            UpdateOne();
             //TableDoesNotExist();
             Console.ReadKey();
         }
@@ -117,45 +117,43 @@ namespace TestApplication
             Console.Clear();
         }
 
-        //private static void UpdateOne()
-        //{
-        //    ORM orm = new ORM();
+        private static void UpdateOne()
+        {
+            ORM orm = new ORM();
 
-        //    IQueryable<Werke> qry = orm.GetQuery<Werke>();
+            IQueryable<Werke> qry = orm.GetQuery<Werke>();
 
-        //    IQueryable<Werke> filtered = qry
-        //        .Where(i => i.Id == 3);
+            IQueryable<Werke> filtered = qry
+                .Where(i => i.Id == 14);
 
-        //    List<Werke> lst = filtered.ToList();
+            List<Werke> lst = filtered.ToList();
 
-        //    foreach (var i in lst)
-        //    {
-        //        Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
-        //    }
-        //    var newObj = lst[0];
-        //    newObj.Ort = "Eckenberger";
+            foreach (var i in lst)
+            {
+                Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+            }
+            var newObj = lst[0];
+            newObj.Ort = "Eckenberger";
 
-        //    orm.Update(newObj);
-        //    Console.WriteLine("Add to update object.");
-        //    orm.SaveChanges();
-        //    Console.WriteLine("Updated object.");
+            orm.SaveChanges();
+            Console.WriteLine("Updated object.");
 
-        //    IQueryable<Werke> qry2 = orm.GetQuery<Werke>();
+            IQueryable<Werke> qry2 = orm.GetQuery<Werke>();
 
-        //    IQueryable<Werke> filtered2 = qry2
-        //        .Where(i => i.Id == 3);
+            IQueryable<Werke> filtered2 = qry2
+                .Where(i => i.Id == 14);
 
 
-        //    List<Werke> lst2 = filtered2.ToList();
+            List<Werke> lst2 = filtered2.ToList();
 
-        //    foreach (var i in lst2)
-        //    {
-        //        Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
-        //    }
+            foreach (var i in lst2)
+            {
+                Console.WriteLine($"{i.Id}, {i.Bezeichnung}, {i.Ort}, {i.Strasse}");
+            }
 
-        //    Console.ReadKey();
-        //    Console.Clear();
-        //}
+            Console.ReadKey();
+            Console.Clear();
+        }
 
         private static void TableDoesNotExist()
         {

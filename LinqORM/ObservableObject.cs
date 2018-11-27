@@ -6,13 +6,15 @@ using System.Text;
 
 namespace LinqORM
 {
+    /// <summary>
+    /// Class for observing properties and emitting a propertyChanged event if something changes.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class ObservableObject : INotifyPropertyChanged
     {
-        public ObservableObject()
-        {
-
-        }
-
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")

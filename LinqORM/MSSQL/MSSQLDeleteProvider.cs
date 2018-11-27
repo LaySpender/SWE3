@@ -11,6 +11,10 @@ using System.Text;
 
 namespace LinqORM.MSSQL
 {
+    /// <summary>
+    /// Class for communication with mssql database regarding delete statements.
+    /// </summary>
+    /// <seealso cref="LinqORM.Interfaces.ISQLDeleteProvider" />
     public class MSSQLDeleteProvider : ISQLDeleteProvider
     {
         string table;
@@ -23,6 +27,11 @@ namespace LinqORM.MSSQL
             "User id=orm;" +
             "Password=c#;";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MSSQLDeleteProvider"/> class.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <exception cref="NoPrimaryKeyException"></exception>
         public MSSQLDeleteProvider(object obj)
         {
             table = obj.GetType().Name;
@@ -61,9 +70,18 @@ namespace LinqORM.MSSQL
                 throw new NoPrimaryKeyException();
             }
         }
+        /// <summary>
+        /// Gets the statement.
+        /// </summary>
+        /// <value>
+        /// The statement.
+        /// </value>
+        public string Statement => statement;
 
-        private string Statement => statement;
-
+        /// <summary>
+        /// Deletes the object.
+        /// </summary>
+        /// <exception cref="Exception">Exception while deleting data in db.</exception>
         public void DeleteObject()
         {
             try

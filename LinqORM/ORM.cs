@@ -16,6 +16,9 @@ namespace LinqORM
     {
         private ChangeTracker tracker;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ORM"/> class.
+        /// </summary>
         public ORM()
         {
             tracker = new ChangeTracker();
@@ -23,6 +26,12 @@ namespace LinqORM
 
         private bool HasToSave { get; set; }
 
+        /// <summary>
+        /// Gets a query.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ActionsNotExecutedException"></exception>
         public IQueryable<T> GetQuery<T>() 
         {
             if (HasToSave) throw new ActionsNotExecutedException();
@@ -80,6 +89,12 @@ namespace LinqORM
             return result;
         }
 
+        /// <summary>
+        /// Attaches the specified object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">The object.</param>
+        /// <exception cref="ActionsNotExecutedException"></exception>
         public void Attach<T>(T obj)
         {
             if (HasToSave) throw new ActionsNotExecutedException();
@@ -87,12 +102,12 @@ namespace LinqORM
             tracker.AddToSave(obj);
         }
 
-        //private void AddToSave<T>(T obj)
-        //{
-        //    tracker.ToSave.Add(obj);
-        //    AddToTracking(obj);
-        //}
-
+        /// <summary>
+        /// Deletes the specified object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">The object.</param>
+        /// <exception cref="ActionsNotExecutedException"></exception>
         public void Delete<T>(T obj)
         {
             if (HasToSave) throw new ActionsNotExecutedException();
@@ -100,22 +115,11 @@ namespace LinqORM
             tracker.AddToDelete(obj);
         }
 
-        //private void AddToDelete<T>(T obj)
-        //{
-        //    tracker.ToDelete.Add(obj);
-        //    tracker.AllObjects.Remove(obj);
-        //}
-
-        //public void Update<T>(T obj)
-        //{
-        //    if (HasToSave) throw new ActionsNotExecutedException();
-        //    HasToSave = true;
-        //    tracker.Modified.Add(obj);
-        //}
-
+        /// <summary>
+        /// Saves the changes.
+        /// </summary>
         public void SaveChanges()
         {
-            // todo: get all the information from changeTracker and update, delete and insert all the data
             SubmitDelete(tracker.ToDelete);
             SubmitInsert(tracker.ToSave);
             SubmitUpdate(tracker.Modified);

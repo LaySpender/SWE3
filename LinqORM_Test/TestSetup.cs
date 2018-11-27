@@ -1,4 +1,5 @@
-﻿using LinqORM.Attributes;
+﻿using LinqORM;
+using LinqORM.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,14 +8,35 @@ namespace LinqORM_Test
 {
     internal class TestSetup
     {
-        internal class TestTable
+        internal class TestTableWithId : ObservableObject
         {
+            private int id;
+            private string bezeichnung;
+            private string ort;
+            private string strasse;
+
+            [PrimaryKey]
+            public int Id { get => id; set => SetProperty(ref id, value); }
             [Column]
-            public string FirstName { get; set; }
+            public string Bezeichnung { get => bezeichnung; set => SetProperty(ref bezeichnung, value); }
             [Column]
-            public string LastName { get; set; }
+            public string Ort { get => ort; set => SetProperty(ref ort, value); }
             [Column]
-            public int Age { get; set; }
+            public string Strasse { get => strasse; set => SetProperty(ref strasse, value); }
+        }
+
+        internal class TestTableWithoutId : ObservableObject
+        {
+            private string bezeichnung;
+            private string ort;
+            private string strasse;
+
+            [Column]
+            public string Bezeichnung { get => bezeichnung; set => SetProperty(ref bezeichnung, value); }
+            [Column]
+            public string Ort { get => ort; set => SetProperty(ref ort, value); }
+            [Column]
+            public string Strasse { get => strasse; set => SetProperty(ref strasse, value); }
         }
 
         internal class NoColumnAttrTestTable

@@ -7,6 +7,11 @@ using LinqORM.Interfaces;
 
 namespace LinqORM.MSSQL
 {
+    /// <summary>
+    /// Class for communication with mssql database regarding select statements.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="LinqORM.Interfaces.ISQLSelectProvider" />
     public class MSSQLSelectProvider<T> : ISQLSelectProvider
     {
         private MSSQLSelectVisitor<T> visitor;
@@ -17,6 +22,10 @@ namespace LinqORM.MSSQL
             "User id=orm;" +
             "Password=c#;";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MSSQLSelectProvider{T}"/> class.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
         public MSSQLSelectProvider(Expression expression)
         {
             visitor = new MSSQLSelectVisitor<T>();
@@ -27,8 +36,19 @@ namespace LinqORM.MSSQL
             sqlInfo = visitor.SqlBuilder;
         }
 
+        /// <summary>
+        /// Gets the statement.
+        /// </summary>
+        /// <value>
+        /// The statement.
+        /// </value>
         public string Statement { get; }
 
+        /// <summary>
+        /// Selects the objects.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception">Exception while getting data from db.</exception>
         public IEnumerable<Dictionary<string, object>> GetObjects()
         {
             List<Dictionary<string, object>> objects = new List<Dictionary<string, object>>();

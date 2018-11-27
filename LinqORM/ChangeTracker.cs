@@ -1,4 +1,5 @@
 ﻿using LinqORM.Attributes;
+using LinqORM.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ namespace LinqORM
         public List<object> ToSave;
         public List<object> ToDelete;
 
-        public ChangeTracker()
+        internal ChangeTracker()
         {
             _objectModifiedDelegate = Delegate.CreateDelegate(typeof(PropertyChangedEventHandler), this, "PropertyChanged");
             AllObjects = new List<object>();
@@ -25,7 +26,7 @@ namespace LinqORM
             ToDelete = new List<object>();
         }
 
-        public void Track(object obj)
+        internal void Track(object obj)
         {
             if (AllObjects.Contains(obj)) return;
             AllObjects.Add(obj);
@@ -44,16 +45,16 @@ namespace LinqORM
             }
         }
 
-        public T ReplaceTracked<T>(T obj)
+        internal T ReplaceTracked<T>(T obj)
         {
             PropertyInfo idProperty = typeof(T).GetProperties().Single(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(PrimaryKeyAttribute)));
             var instance = AllObjects.OfType<T>().SingleOrDefault(x => (int)idProperty.GetValue(x) == (int)idProperty.GetValue(obj));
             return (instance != null) ? instance : obj;
         }
 
-        public void AddToSave(object obj)
+        internal void AddToSave(object obj)
         {
-            if (AllObjects.Contains(obj) && !ToDelete.Contains(obj)) throw new Exception();
+            if (AllObjects.Contains(obj) && !ToDelete.Contains(obj)) throw new AlreadyAddedException();
             if (ToDelete.Contains(obj))
             {
                 ToDelete.Remove(obj);
@@ -67,7 +68,7 @@ namespace LinqORM
             }  
         }
 
-        public void InstancesSaved()
+        internal void InstancesSaved()
         {
             foreach(var obj in ToSave)
             {
@@ -76,7 +77,7 @@ namespace LinqORM
             ToSave.Clear();
         }
 
-        public void InstancesDeleted()
+        internal void InstancesDeleted()
         {
             foreach (var obj in ToDelete)
             {
@@ -85,14 +86,14 @@ namespace LinqORM
             ToDelete.Clear();
         }
 
-        public void InstancesUpdated()
+        internal void InstancesUpdated()
         {
             Modified.Clear();
         }
 
-        public void AddToDelete(object obj)
+        internal void AddToDelete(object obj)
         {
-            if (!AllObjects.Contains(obj)) throw new Exception();
+            if (!AllObjects.Contains(obj)) throw new AlreadyAddedException();
             if (ToDelete.Contains(obj)) throw new Exception();
             if(ToSave.Contains(obj))
             {

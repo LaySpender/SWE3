@@ -4,7 +4,11 @@ using System.Text;
 
 namespace LinqORM.Exceptions
 {
-    class InstanceNotFoundException : Exception
+    /// <summary>
+    /// no instance has been found.
+    /// </summary>
+    /// <seealso cref="System.Exception" />
+    public class InstanceNotFoundException : Exception
     {
         public InstanceNotFoundException()
         {

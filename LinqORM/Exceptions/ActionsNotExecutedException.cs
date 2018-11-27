@@ -5,7 +5,11 @@ using System.Text;
 
 namespace LinqORM.Exceptions
 {
-    internal class ActionsNotExecutedException : Exception
+    /// <summary>
+    /// after each action (attach, delete) the saveChanges method has to be called.
+    /// </summary>
+    /// <seealso cref="System.Exception" />
+    public class ActionsNotExecutedException : Exception
     {
         public ActionsNotExecutedException()
         {

@@ -4,6 +4,10 @@ using System.Text;
 
 namespace LinqORM.Exceptions
 {
+    /// <summary>
+    /// no primary key has been found.
+    /// </summary>
+    /// <seealso cref="System.Exception" />
     public class NoPrimaryKeyException : Exception
     {
         public NoPrimaryKeyException()

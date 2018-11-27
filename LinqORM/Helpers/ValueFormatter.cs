@@ -4,9 +4,17 @@ using System.Text;
 
 namespace LinqORM.Helpers
 {
-    internal class ValueFormatter
+    /// <summary>
+    /// Class for formatting values for mssql queries.
+    /// </summary>
+    public class ValueFormatter
     {
-        internal static string FormatForQuery(object obj)
+        /// <summary>
+        /// Formats for query.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns></returns>
+        public static string FormatForQuery(object obj)
         {
             if (obj.GetType() == typeof(string))
             {

@@ -9,11 +9,25 @@ using System.Text;
 
 namespace LinqORM
 {
+    /// <summary>
+    /// Class for visiting the Expression Tree
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="LinqORM.ExpressionTreeVisitor" />
     public class MSSQLSelectVisitor<T> : ExpressionTreeVisitor
     {
         private MSSQLSelectBuilder _sqlBuilder = new MSSQLSelectBuilder();
+        /// <summary>
+        /// Gets or sets the SQL builder.
+        /// </summary>
+        /// <value>
+        /// The SQL builder.
+        /// </value>
         public MSSQLSelectBuilder SqlBuilder { get => _sqlBuilder; set => _sqlBuilder = value; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MSSQLSelectVisitor{T}"/> class.
+        /// </summary>
         public MSSQLSelectVisitor()
         {
             SqlBuilder.Table = typeof(T).Name;
@@ -35,7 +49,12 @@ namespace LinqORM
             }
             SqlBuilder.Columns = columns;
         }
-        
+
+        /// <summary>
+        /// Visits the specified expression.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns></returns>
         public override Expression Visit(Expression e)
         {
             if (e != null)
